@@ -97,7 +97,24 @@ if options['irb']
     exit 0
   end
 else
+  require 'yaml'
   require 'gollum/frontend/app'
   Precious::App.set(:gollum_path, gollum_path)
+  
+  unless File.exist?('gollum_oauth.yml')
+    STDERR.puts 'No oauth config file present, creating...'
+    File.open('gollum_oauth.yml', 'w') do |f|
+      f << {
+          :service_name => '...',
+          :consumer_key => '...',
+          :consumer_secret => '...',
+          :server_url => 'http://www.example.com'
+        }.to_yaml
+    end
+    STDERR.puts 'Please edit gollum_oauth.yml and start again.'
+    exit(-1)
+  end
+  
+  Precious::OAuth.config = YAML.load(File.read('gollum_oauth.yml'))
   Precious::App.run!(options)
 end
