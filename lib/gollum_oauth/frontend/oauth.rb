@@ -27,7 +27,7 @@ module Precious
         end
 
         get '/auth' do
-          access_token = session[:request_token].get_access_token oauth_token: params['oauth_token'], oauth_verifier: params['oauth_verifier']
+          access_token = session[:request_token].get_access_token :oauth_token => params['oauth_token'], :oauth_verifier => params['oauth_verifier']
           user = get_user_details(access_token)
           session['name'] = user['login']
           session['email'] = user['email']
@@ -49,7 +49,7 @@ module Precious
       @consumer ||= ::OAuth::Consumer.new(
         oauth_config[:consumer_key],
         oauth_config[:consumer_secret],
-        site: oauth_server_url)
+        :site => oauth_server_url)
     end
     
     def oauth_server_url
