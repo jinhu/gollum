@@ -1,11 +1,11 @@
 require 'cgi'
 require 'sinatra'
-require 'gollum'
+require 'gollum_oauth'
 require 'mustache/sinatra'
 
-require 'gollum/frontend/oauth'
-require 'gollum/frontend/views/layout'
-require 'gollum/frontend/views/editable'
+require 'gollum_oauth/frontend/oauth'
+require 'gollum_oauth/frontend/views/layout'
+require 'gollum_oauth/frontend/views/editable'
 
 module Precious
   class App < Sinatra::Base

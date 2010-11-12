@@ -15,7 +15,7 @@ HELP
 
 require 'optparse'
 require 'rubygems'
-require 'gollum'
+require 'gollum_oauth'
 
 exec = {}
 options = { 'port' => 4567, 'bind' => '127.0.0.1' }
@@ -98,7 +98,7 @@ if options['irb']
   end
 else
   require 'yaml'
-  require 'gollum/frontend/app'
+  require 'gollum_oauth/frontend/app'
   Precious::App.set(:gollum_path, gollum_path)
   
   unless File.exist?('gollum_oauth.yml')
