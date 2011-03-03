@@ -8,7 +8,7 @@ dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift(File.join(dir, '..', 'lib'))
 $LOAD_PATH.unshift(dir)
 
-require 'gollum'
+require 'gollum_oauth'
 
 # Make sure we're in the test dir, the tests expect that to be the current
 # directory.

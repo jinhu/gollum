@@ -15,7 +15,7 @@ HELP
 
 require 'optparse'
 require 'rubygems'
-require 'gollum'
+require 'gollum_oauth'
 
 exec = {}
 options = { 'port' => 4567, 'bind' => '127.0.0.1' }
@@ -97,7 +97,25 @@ if options['irb']
     exit 0
   end
 else
-  require 'gollum/frontend/app'
+  require 'yaml'
+  require 'gollum_oauth/frontend/app'
   Precious::App.set(:gollum_path, gollum_path)
+  
+  unless File.exist?('gollum_oauth.yml')
+    STDERR.puts 'No oauth config file present, creating...'
+    File.open('gollum_oauth.yml', 'w') do |f|
+      f << {
+          :service_name => '...',
+          :client_id => '...',
+          :client_secret => '...',
+          :site => 'http://www.example.com',
+          :scope => ''
+        }.to_yaml
+    end
+    STDERR.puts 'Please edit gollum_oauth.yml and start again.'
+    exit(-1)
+  end
+  
+  Precious::OAuth.config = YAML.load(File.read('gollum_oauth.yml'))
   Precious::App.run!(options)
 end

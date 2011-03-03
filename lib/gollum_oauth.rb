@@ -8,16 +8,16 @@ require 'github/markup'
 require 'sanitize'
 
 # ruby 1.8 compatibility
-require 'gollum/ruby1.8'
+require 'gollum_oauth/ruby1.8'
 
 # internal
-require 'gollum/pagination'
-require 'gollum/blob_entry'
-require 'gollum/wiki'
-require 'gollum/page'
-require 'gollum/file'
-require 'gollum/markup'
-require 'gollum/albino'
+require 'gollum_oauth/pagination'
+require 'gollum_oauth/blob_entry'
+require 'gollum_oauth/wiki'
+require 'gollum_oauth/page'
+require 'gollum_oauth/file'
+require 'gollum_oauth/markup'
+require 'gollum_oauth/albino'
 
 module Gollum
   VERSION = '1.1.0'

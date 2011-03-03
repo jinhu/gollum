@@ -1,3 +1,5 @@
 coverage
 pkg
 .DS_Store
+gollum_oauth.yml
+.rvmrc

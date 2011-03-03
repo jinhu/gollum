@@ -1,13 +1,15 @@
 require 'cgi'
 require 'sinatra'
-require 'gollum'
+require 'gollum_oauth'
 require 'mustache/sinatra'
 
-require 'gollum/frontend/views/layout'
-require 'gollum/frontend/views/editable'
+require 'gollum_oauth/frontend/oauth2'
+require 'gollum_oauth/frontend/views/layout'
+require 'gollum_oauth/frontend/views/editable'
 
 module Precious
   class App < Sinatra::Base
+    include Precious::OAuth
     register Mustache::Sinatra
 
     dir = File.dirname(File.expand_path(__FILE__))
@@ -41,6 +43,8 @@ module Precious
     end
 
     get '/edit/*' do
+      redirect '/login' if !get_auth_user
+
       @name = params[:splat].first
       wiki = Gollum::Wiki.new(settings.gollum_path)
       if page = wiki.page(@name)
@@ -53,25 +57,29 @@ module Precious
     end
 
     post '/edit/*' do
+      redirect '/login' if !get_auth_user
+
       name   = params[:splat].first
       wiki   = Gollum::Wiki.new(settings.gollum_path)
       page   = wiki.page(name)
       format = params[:format].intern
       name   = params[:rename] if params[:rename]
 
-      wiki.update_page(page, name, format, params[:content], commit_message)
+      wiki.update_page(page, name, format, params[:content], commit_data)
 
       redirect "/#{CGI.escape(Gollum::Page.cname(name))}"
     end
 
     post '/create/*' do
+      redirect '/login' if !get_auth_user
+
       name = params[:page]
       wiki = Gollum::Wiki.new(settings.gollum_path)
 
       format = params[:format].intern
 
       begin
-        wiki.write_page(name, format, params[:content], commit_message)
+        wiki.write_page(name, format, params[:content], commit_data)
         redirect "/#{CGI.escape(name)}"
       rescue Gollum::DuplicatePageError => e
         @message = "Duplicate page: #{e.message}"
@@ -147,18 +155,22 @@ module Precious
         @page = page
         @name = name
         @content = page.formatted_data
+        @is_logged_in = !get_auth_user.nil?
         mustache :page
       elsif file = wiki.file(name)
         content_type file.mime_type
         file.raw_data
       else
+        redirect '/login' if !get_auth_user
         @name = name
         mustache :create
       end
     end
 
-    def commit_message
-      { :message => params[:message] }
+    def commit_data
+      { :name => session['name'],
+        :email => session['email'],
+        :message => params[:message] }
     end
   end
 end
