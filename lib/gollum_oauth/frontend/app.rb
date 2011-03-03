@@ -3,7 +3,7 @@ require 'sinatra'
 require 'gollum_oauth'
 require 'mustache/sinatra'
 
-require 'gollum_oauth/frontend/oauth'
+require 'gollum_oauth/frontend/oauth2'
 require 'gollum_oauth/frontend/views/layout'
 require 'gollum_oauth/frontend/views/editable'
 

@@ -1,4 +1,4 @@
-require 'oauth'
+require 'oauth2'
 require 'json'
 
 module Precious
@@ -9,7 +9,7 @@ module Precious
     end
     
     def self.config
-      @config || raise('Please configure oauth using Precious::OAuth.config = {:service_name => \'...\', :consumer_key => \'...\', :consumer_secret => \'...\', :server_url => \'http://www.example.com\'}')
+      @config || raise('Please configure oauth using Precious::OAuth.config = {:service_name => \'...\', :client_id => \'...\', :client_secret => \'...\', :site => \'http://www.example.com\', :scope => \'...\'}')
     end
     
     def self.included(base)
@@ -22,12 +22,12 @@ module Precious
           @service_name = oauth_config[:service_name]
           @request = request
           @session = session
-          @oauth_consumer = oauth_consumer
+          @oauth_client = oauth_client
           mustache :login
         end
 
         get '/auth' do
-          access_token = session[:request_token].get_access_token :oauth_token => params['oauth_token'], :oauth_verifier => params['oauth_verifier']
+          access_token = oauth_client.web_server.get_access_token(params[:code], :grant_type => 'authorization_code')
           user = get_user_details(access_token)
           session['name'] = user['login']
           session['email'] = user['email']
@@ -42,18 +42,22 @@ module Precious
     end
     
     def get_user_details(access_token)
-      JSON.parse(access_token.get("#{oauth_server_url}/api/user").body)
+      JSON.parse(access_token.get("#{oauth_server_url}/api/user"))
     end
     
-    def oauth_consumer
-      @consumer ||= ::OAuth::Consumer.new(
-        oauth_config[:consumer_key],
-        oauth_config[:consumer_secret],
-        :site => oauth_server_url)
+    def oauth_client
+      @client ||= ::OAuth2::Client.new(
+        oauth_config[:client_id],
+        oauth_config[:client_secret],
+        :site => oauth_server_url,
+        :scope => oauth_config[:scope],
+        :authorize_path => oauth_config[:authorize_path],
+        :access_token_path => oauth_config[:access_token_path]
+      )
     end
     
     def oauth_server_url
-      oauth_config[:server_url]
+      oauth_config[:site]
     end
     
     def oauth_config

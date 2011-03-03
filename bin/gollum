@@ -106,9 +106,10 @@ else
     File.open('gollum_oauth.yml', 'w') do |f|
       f << {
           :service_name => '...',
-          :consumer_key => '...',
-          :consumer_secret => '...',
-          :server_url => 'http://www.example.com'
+          :client_id => '...',
+          :client_secret => '...',
+          :site => 'http://www.example.com',
+          :scope => ''
         }.to_yaml
     end
     STDERR.puts 'Please edit gollum_oauth.yml and start again.'
