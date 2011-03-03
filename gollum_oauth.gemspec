@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.date              = '2010-11-12'
   s.rubyforge_project = 'gollum_oauth'
 
-  s.summary     = "A simple, Git-powered wiki. With OAuth users."
-  s.description = "A simple, Git-powered wiki with a sweet API and local frontend. And OAuth."
+  s.summary     = "A simple, Git-powered wiki. With OAuth2 users."
+  s.description = "A simple, Git-powered wiki with a sweet API and local frontend. And OAuth2."
 
   s.authors  = ["Tom Preston-Werner", "Rick Olson", 'Alexander Lang']
   s.email    = 'alex@upstre.am'
@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
     lib/gollum_oauth/blob_entry.rb
     lib/gollum_oauth/file.rb
     lib/gollum_oauth/frontend/app.rb
-    lib/gollum_oauth/frontend/oauth.rb
+    lib/gollum_oauth/frontend/oauth2.rb
     lib/gollum_oauth/frontend/public/css/editbar.css
     lib/gollum_oauth/frontend/public/css/gollum.css
     lib/gollum_oauth/frontend/public/css/screen.css
