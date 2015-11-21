@@ -16,7 +16,7 @@ module Precious
 
     # We want to serve public assets for now
 
-    set :public,    "#{dir}/public"
+    set :public_dir,    "#{dir}/public"
     set :static,    true
 
     set :mustache, {
